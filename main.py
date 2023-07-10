@@ -2,6 +2,13 @@ import pygame as pg
 import moderngl as mg
 import sys
 
+"""
+Curruently following tutorial from https://www.youtube.com/watch?v=eJDIsFJN4OQ (OpenGL Pygame Tutorial)
+"""
+
+
+
+
 #Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
