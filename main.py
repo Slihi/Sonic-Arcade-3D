@@ -3,6 +3,7 @@ import moderngl as mg
 import sys
 from model import *
 from camera import Camera
+from light import Light
 """
 Currently following tutorial from https://www.youtube.com/watch?v=eJDIsFJN4OQ (OpenGL Pygame Tutorial)
 """
@@ -46,12 +47,26 @@ class GraphicsEngine:
         #Create OpenGl context
         pg.display.set_mode(self.WINDOW_SIZE, flags= pg.OPENGL | pg.DOUBLEBUF | pg.RESIZABLE)
 
+        #Mouse Settings
+        pg.mouse.set_visible(False)
+        pg.event.set_grab(True)
+
         #Detect and use existing OpenGl context
         self.ctx = mg.create_context()
+
+        #Enable depth testing
+        # The mgl.CULL_FACE makes it so that it doesn't render invisible faces
+        #Counter clockwise to see outer faces, clockwise to see inner faces
+        #self.ctx.front_face = 'cw'
+        self.ctx.enable(flags=mg.DEPTH_TEST | mg.CULL_FACE)
 
         #Create an object to help track time
         self.clock = pg.time.Clock()
         self.time = 0
+        self.delta_time = 0
+
+        #Create a light
+        self.light = Light()
 
         #Create a camera
         self.camera = Camera(self)
@@ -88,8 +103,9 @@ class GraphicsEngine:
         while True:
             self.get_time()
             self.check_events()
+            self.camera.update()
             self.render()
-            self.clock.tick(60)
+            self.delta_time = self.clock.tick(60)
 
 if __name__ == '__main__':
     window = GraphicsEngine(SCREEN_WIDTH, SCREEN_HEIGHT)

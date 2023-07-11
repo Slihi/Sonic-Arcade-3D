@@ -1,5 +1,6 @@
 import numpy as np
 import glm
+import pygame as pg
 
 class Triangle:
     def __init__(self, app):
@@ -64,10 +65,28 @@ class Cube:
         self.vao = self.get_vao()
         self.m_model = self.get_model_matrix()
 
+        #Load texture
+        self.texture = self.get_texture('textures/img_2.png')
+
         self.on_init()
+
+    def get_texture(self, texture_path):
+
+        #Since in pygame the y axis is flipped, we need to flip the image
+        texture = pg.image.load(texture_path).convert()
+
+        #First x, then y. X = false, Y = true
+        texture = pg.transform.flip(texture, False, True)
+        #Temporary text for lighting, fill shape with color
+        texture.fill('red')
+        texture = self.ctx.texture(size=texture.get_size(), components=3,
+                                   data=pg.image.tostring(texture, 'RGB'))
+        return texture
     def update(self):
-        m_model = glm.rotate(self.m_model, self.app.time, glm.vec3(0, 1, 0))
+        m_model = glm.rotate(self.m_model, self.app.time * 0.5, glm.vec3(0, 1, 0))
         self.shader_program['m_model'].write(m_model)
+        self.shader_program['m_view'].write(self.app.camera.m_view)
+        self.shader_program['camPos'].write(self.app.camera.position)
 
     def get_model_matrix(self):
         #Model Matrix
@@ -77,6 +96,17 @@ class Cube:
         return m_model
     def on_init(self):
     #Pass the projection matrix from the camera to the shader program
+
+        self.shader_program['light.position'].write(self.app.light.position)
+        self.shader_program['light.Ia'].write(self.app.light.Ia)
+        self.shader_program['light.Id'].write(self.app.light.Id)
+        self.shader_program['light.Is'].write(self.app.light.Is)
+
+        #Name of texture variable in shader program and call use() on the texture
+        self.shader_program['u_texture_0'] = 0
+        self.texture.use()
+
+        #mvp = m_proj * m_view * m_model method
         self.shader_program['m_proj'].write(self.app.camera.m_proj)
         self.shader_program['m_view'].write(self.app.camera.m_view)
         self.shader_program['m_model'].write(self.m_model)
@@ -95,7 +125,7 @@ class Cube:
         # We associated our vertex buffer with the shader program
         # we specific buffer formate ('3f') and the name of the attribute in the shader program ('in_position')
         # This is saying that in the buffer, each vertex is assigned 3 float numbers (x,y,z), and these numbers are associated with the attribute 'in_position' in the shader program
-        vao = self.ctx.vertex_array(self.shader_program, [(self.vbo, '2f 3f', 'in_texcoord_0', 'in_position')])
+        vao = self.ctx.vertex_array(self.shader_program, [(self.vbo, '2f 3f 3f', 'in_texcoord_0', 'in_normal', 'in_position')])
         return vao
 
     def get_vertex_data(self):
@@ -123,6 +153,17 @@ class Cube:
                              (3, 1, 2), (3, 0, 1)]
         tex_coord_data = self.get_data(tex_coord, tex_coord_indices)
 
+        #normals
+        normals = [(0, 0, 1) * 6,
+                   (1, 0, 0) * 6,
+                   (0, 0, -1) * 6,
+                   (-1, 0, 0) * 6,
+                   (0, 1, 0) * 6,
+                   (0, -1, 0) * 6]
+
+        normals = np.array(normals, dtype='f4').reshape(36, 3)
+
+        vertex_data = np.hstack([normals, vertex_data])
         vertex_data = np.hstack([tex_coord_data, vertex_data])
         return vertex_data
 
