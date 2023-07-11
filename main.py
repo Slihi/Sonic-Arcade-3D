@@ -1,9 +1,10 @@
 import pygame as pg
 import moderngl as mg
 import sys
-
+from model import *
+from camera import Camera
 """
-Curruently following tutorial from https://www.youtube.com/watch?v=eJDIsFJN4OQ (OpenGL Pygame Tutorial)
+Currently following tutorial from https://www.youtube.com/watch?v=eJDIsFJN4OQ (OpenGL Pygame Tutorial)
 """
 
 
@@ -50,10 +51,21 @@ class GraphicsEngine:
 
         #Create an object to help track time
         self.clock = pg.time.Clock()
+        self.time = 0
+
+        #Create a camera
+        self.camera = Camera(self)
+
+        #Create a triangle
+        #self.scene = Triangle(self)
+
+        #Create a cube
+        self.scene = Cube(self)
 
     def check_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                self.scene.destroy()
                 pg.quit()
                 sys.exit()
 
@@ -61,11 +73,20 @@ class GraphicsEngine:
         # clear frame buffer
         #* must be in front of tuple because it unpacks it into arguments for the function
         self.ctx.clear(*self.WINDOW_COLOR)
+        
+        #Render scene (the rectangle in this case)
+        self.scene.render()
+
         #Swap front and back buffers
         pg.display.flip()
 
+    def get_time(self):
+        self.time = pg.time.get_ticks() * 0.001
+
+
     def run(self):
         while True:
+            self.get_time()
             self.check_events()
             self.render()
             self.clock.tick(60)
