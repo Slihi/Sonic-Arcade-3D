@@ -24,6 +24,7 @@ vec3 getLight(vec3 color){
     vec3 Normal = normalize(normal);
     // ambient light
     //Multiply the color of the object by the ambient light
+
     vec3 ambient = light.Ia;
     // diffuse light
     //Multiply the color of the object by the diffuse light
@@ -33,7 +34,7 @@ vec3 getLight(vec3 color){
 
     // specular light
     //Multiply the color of the object by the specular light
-    vec3 viewDir = normalize(camPos-fragPos);
+    vec3 viewDir = normalize(camPos - fragPos);
     vec3 reflectDir = reflect(-lightDir, Normal);
     // pow(x, y) = x^y
     // 32 is intensity of the specular light
