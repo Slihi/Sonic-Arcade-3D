@@ -4,8 +4,14 @@ import pygame as pg
 
 
 class BaseModel:
-    def __init__(self, app, vao_name, tex_id):
+    def __init__(self, app, vao_name, tex_id, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
+
         self.app = app
+
+        self.pos = pos
+        self.rot = glm.vec3([glm.radians(angle) for angle in rot])
+        self.scale = scale
+
         self.m_model = self.get_model_matrix()
         self.tex_id = tex_id
         self.vao = app.mesh.vao.vaos[vao_name]
@@ -32,6 +38,19 @@ class BaseModel:
         #This is the matrix that will be used to transform the vertices of the cube
         #We will use this matrix to transform the vertices of the cube
         m_model = glm.mat4()
+
+        #Translate
+        m_model = glm.translate(m_model, self.pos)
+
+        #Rotate x
+        m_model = glm.rotate(m_model, self.rot.x, glm.vec3(1, 0, 0))
+        #Rotate y
+        m_model = glm.rotate(m_model, self.rot.y, glm.vec3(0, 1, 0))
+        #Rotate z
+        m_model = glm.rotate(m_model, self.rot.z, glm.vec3(0, 0, 1))
+
+        #Scale
+        m_model = glm.scale(m_model, glm.vec3(self.scale))
         return m_model
 
     def render(self):
@@ -39,8 +58,8 @@ class BaseModel:
         self.vao.render()
 
 class Cube(BaseModel):
-    def __init__(self, app, vao_name='cube', tex_id=0):
-        super().__init__(app, vao_name, tex_id)
+    def __init__(self, app, vao_name='cube', tex_id=0, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
+        super().__init__(app, vao_name, tex_id, pos, rot, scale)
         self.on_init()
 
     def update(self):

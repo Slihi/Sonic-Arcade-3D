@@ -5,6 +5,8 @@ from model import *
 from camera import Camera
 from light import Light
 from mesh import Mesh
+from scene import Scene
+
 """
 Currently following tutorial from https://www.youtube.com/watch?v=eJDIsFJN4OQ (OpenGL Pygame Tutorial)
 """
@@ -75,7 +77,7 @@ class GraphicsEngine:
         #Mesh instance
         self.mesh = Mesh(self)
         #Create a cube
-        self.scene = Cube(self)
+        self.scene = Scene(self)
 
     def check_events(self):
         for event in pg.event.get():

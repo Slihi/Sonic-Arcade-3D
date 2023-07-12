@@ -45,8 +45,17 @@ vec3 getLight(vec3 color){
 }
 
 void main(){
+    // for gamma correction (make it look brighter I guess)
+    float gamma = 2.2;
+
     vec3 color = texture(u_texture_0, uv_0).rgb;
+    color = pow(color, vec3(gamma));
+
     color = getLight(color);
+
+    // gamma correction (Not that just this line alone will not work as it also applies to the texture + light)
+    color = pow(color, 1 / vec3(gamma));
+
     fragColor = vec4(color, 1.0);
 
 }
