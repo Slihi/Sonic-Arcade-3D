@@ -10,8 +10,14 @@ class VAO:
         self.program = ShaderProgram(ctx)
         self.vaos = {}
 
+        # Adding instances of VAOs to the dictionary
         self.vaos['cube'] = self.get_vao(self.program.programs['default'],
                                          self.vbo.vbos['cube'])
+
+        #Textures not implimented yet
+        self.vaos['tree'] = self.get_vao(self.program.programs['default'],
+                                         self.vbo.vbos['tree'])
+
 
     def get_vao(self, program, vbo):
         vao = self.ctx.vertex_array(program, [(vbo.vbo, vbo.format, *vbo.attributes)])

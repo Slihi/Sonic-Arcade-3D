@@ -9,6 +9,10 @@ from scene import Scene
 
 """
 Currently following tutorial from https://www.youtube.com/watch?v=eJDIsFJN4OQ (OpenGL Pygame Tutorial)
+Basic 3D rendering with OpenGL and Pygame
+
+
+
 """
 
 

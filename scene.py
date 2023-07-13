@@ -28,6 +28,8 @@ class Scene:
             for z in range(-n, n, s):
                 add(Cube(app, pos=(x, s, z)))
 
+        add(Tree(app, pos=(0, 0, 10)))
+
     def render(self):
         for obj in self.objects:
             obj.render()

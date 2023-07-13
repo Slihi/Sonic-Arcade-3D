@@ -1,0 +1,27 @@
+{
+  "created_at": "2023-07-13T16:40:40.850397",
+  "version": "0.1",
+  "mtllibs": [
+    "Tree low.mtl"
+  ],
+  "vertex_buffers": [
+    {
+      "material": "wire_154185229",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 0,
+      "byte_length": 11136
+    },
+    {
+      "material": "Material__49",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 11136,
+      "byte_length": 1248
+    },
+    {
+      "material": "wire_224086086",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 12384,
+      "byte_length": 4128
+    }
+  ]
+}
